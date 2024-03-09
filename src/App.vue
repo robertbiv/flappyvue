@@ -1,11 +1,16 @@
+<!--Robert Bennethum CMPSC 421-->
+<!--Couldn't figure out how to make picture link to 3d array, so tried a different way-->
+<!--/*Don't publish online, could be problematic because of personal info*/-->
+
 <!--npm run serve-->
 <!--installed firebase from npm-->
+<!--installed vue from npm-->
 <!--https://firebase.google.com/docs/firestore/quickstart-->
 
 
 <template>
   <div id="app" @click="jump" :style="{ height: windowHeight + 'px' }">
-    <figure>
+    <figure> <!--Score-->
       <img id="playScore0" src="../flappy_assets/sprites/0.png" style="float: left; margin-left:40%; margin-right: 5%; margin-bottom: 5%;"><img id="playScore" src="../flappy_assets/sprites/0.png" style="float: left; margin-right: 5%; margin-bottom: 5%;">
     </figure>
 
@@ -31,12 +36,13 @@
 //import firebase from 'firebase/app';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
+/*Not all worked but these did */
 //import {waitFor} from "@babel/core/lib/gensync-utils/async";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
-const firebaseConfig = {
+const firebaseConfig = { /*Don't publish online, could be problematic*/
   apiKey: "AIzaSyACAPoGV__CZog6MfD2WgTYvgAjTHE9vgE",
   authDomain: "cmpsc421-flappyvue.firebaseapp.com",
   projectId: "cmpsc421-flappyvue",
@@ -50,7 +56,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 db.settings({})
-window.addEventListener("load", async function () {
+window.addEventListener("load", async function () { //wait for dom to load then load score board
   // do things after the DOM loads fully
   console.log("Everything is loaded");
   const ul = document.getElementById("score_ul");
@@ -66,7 +72,7 @@ window.addEventListener("load", async function () {
   });
 });
 
-/*db.collection('highScores')
+/*db.collection('highScores') //attempt 1 at calling db, not working, keep for reference from car example
     .orderBy('score', 'desc')
     .limit(10) // Get top 10 scores
     .get()
@@ -92,7 +98,7 @@ window.addEventListener("load", async function () {
 
 export default {
   data() {
-    return {
+    return { //make variables default
       birdy: 220,
       windowHeight: 450,
       pipes: [],
@@ -107,21 +113,21 @@ export default {
     },
     checkLose() {
       for (let pipe of this.pipes) {
-        if (
+        if ( //check if inbetween pipes
             (this.birdy <= pipe.topHeight || this.birdy >= this.windowHeight - pipe.bottomHeight) &&
             pipe.left <= 80 && pipe.left >= 60
         ) {
           this.stop();
         }
-        else if (pipe.left === 60){ //increase score
+        else if (pipe.left === 60){ //increase score if passed pipe
           this.score+=1;
           console.log(this.score);
-          const playScore = document.getElementById("playScore");
-          if (this.score <= 9){
+          const playScore = document.getElementById("playScore"); //update score at top
+          if (this.score <= 9){ /*calling a file wasn't working, so pull from GitHub*/
             playScore.src="https://github.com/samuelcust/flappy-bird-assets/blob/master/sprites/"+this.score+".png?raw=true";
           }
           else {
-            const playScore0 = document.getElementById("playScore0");
+            const playScore0 = document.getElementById("playScore0"); /*calling a file wasn't working, so pull from GitHub*/
             playScore0.src="https://github.com/samuelcust/flappy-bird-assets/blob/master/sprites/"+String(this.score)[0]+".png?raw=true";
             playScore.src="https://github.com/samuelcust/flappy-bird-assets/blob/master/sprites/"+String(this.score)[1]+".png?raw=true";
           }
@@ -130,11 +136,11 @@ export default {
         }
       }
     },
-    run() {
+    run() { /*start clocks*/
       if (this.timer) return;
       this.timer = setInterval(() => {
         this.birdy += 2;
-        this.pipes.forEach((pipe) => {
+        this.pipes.forEach((pipe) => { //shift pipe
           pipe.left -= 2;
         });
         this.checkLose();
@@ -153,11 +159,11 @@ export default {
       this.pipes.push(pipe);
     },
     stop() {
-      /*Stop run*/
+      /*Stop run by stop clocks*/
       clearInterval(this.timer);
       clearInterval(this.pipeTimer);
-      db.collection('highScores').add({
-        playerName: 'Anon Player',
+      db.collection('highScores').add({ //add score to db
+        playerName: 'Anon Player', /*maybe in the future add name, placeholder for now*/
         score: this.score,
       });
     },
@@ -168,13 +174,14 @@ export default {
 };
 </script>
 
+<!--Make pretty and make pipes work-->
 <style>
-#text {
+#text { /*make text readable*/
   background: azure;
 }
 #app {
-  position: relative;
   width: 400px;
+  position: relative;
   background-image: url("../flappy_assets/sprites/background-day.png");
   overflow: hidden;  /*hide offscreen stuff*/
 }
@@ -185,10 +192,10 @@ export default {
   position: absolute;
   left: 80px; /*Shift Right from left side*/
 }
-.playScore {
+/*.playScore {
   position: absolute;
   left: 450px;
-}
+}*/
 .pipe {
   width: 50px;
   position: absolute;
@@ -198,7 +205,7 @@ export default {
   background-image: url("../flappy_assets/sprites/pipe-green.png");
   transform: rotate(180deg);
 }
-.space {
+.space { /*Dont know why this isn't showing in its color, but if it ain't broke dont fix it*/
   position: relative;
   color: aliceblue;
 }
