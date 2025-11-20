@@ -1,6 +1,6 @@
 # flappyvue
 
-A Flappy Bird clone built with Vue.js 3 and Firebase for high score tracking.
+A Flappy Bird clone built with Vue.js 3 and utilizing Firebase for high score tracking.
 
 ## About
 
